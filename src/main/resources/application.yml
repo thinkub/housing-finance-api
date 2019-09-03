@@ -1,0 +1,22 @@
+spring:
+  profiles:
+    active: local
+
+---
+spring:
+  profiles: local
+
+  datasource:
+    platform: h2
+    url: jdbc:h2:file:~/h2/finance;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE
+    username: finance
+    password: finance1!
+    driver-class-name: org.h2.Driver
+  jpa:
+    database-platform: H2
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    generate-ddl: true
+
+
