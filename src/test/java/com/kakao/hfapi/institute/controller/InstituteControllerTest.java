@@ -31,7 +31,7 @@ public class InstituteControllerTest {
 	private InstituteRepository instituteRepository;
 
 	@Test
-	public void 금융기목록_조회() throws Exception {
+	public void 금융목록_조회() throws Exception {
 		given(instituteService.findAll()).willReturn(List.of(Institute.of(InstituteCode.B000.name(), InstituteCode.B000.getBankName()),
 															 Institute.of(InstituteCode.B002.name(), InstituteCode.B002.getBankName())));
 
@@ -41,6 +41,8 @@ public class InstituteControllerTest {
 			   .andExpect(jsonPath("$").isArray())
 			   .andExpect(jsonPath("$.length()").value(2))
 			   .andExpect(jsonPath("$[0].instituteCode").value("B000"))
-			   .andExpect(jsonPath("$[0].instituteName").value("주택도시기금"));
+			   .andExpect(jsonPath("$[0].instituteName").value("주택도시기금"))
+			   .andExpect(jsonPath("$[1].instituteCode").value("B002"))
+			   .andExpect(jsonPath("$[1].instituteName").value("신한은행"));
 	}
 }
