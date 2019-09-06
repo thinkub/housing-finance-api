@@ -35,6 +35,6 @@ public class HousingFinanceDto {
 	}
 
 	private static int convert(String s) {
-		return Integer.valueOf(s.replaceAll(",", ""));
+		return Integer.valueOf(s.replaceAll("[^0-9]", ""));
 	}
 }

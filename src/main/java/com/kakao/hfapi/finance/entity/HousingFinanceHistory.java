@@ -27,11 +27,15 @@ public class HousingFinanceHistory {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int housingFinanceHistoryId;
 
+	@Column(name = "file_name")
+	private String fileName;
+
 	@Column(name = "register_datetime")
 	private LocalDateTime registerDatetime;
 
-	public static HousingFinanceHistory getInstance() {
+	public static HousingFinanceHistory getInstance(String fileName) {
 		return HousingFinanceHistory.builder()
+									.fileName(fileName)
 									.registerDatetime(LocalDateTime.now())
 									.build();
 	}

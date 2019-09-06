@@ -16,10 +16,12 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.AllArgsConstructor;
 
 import com.kakao.hfapi.finance.entity.HousingFinance;
+import com.kakao.hfapi.finance.model.SummaryOfYear;
 import com.kakao.hfapi.finance.service.HousingFinanceService;
+import com.kakao.hfapi.institute.model.InstituteDetail;
 
 @RestController
-@RequestMapping("/api/v1/housing/finance")
+@RequestMapping("/api/v1/housing/finances")
 @AllArgsConstructor
 public class HousingFinanceController {
 	private final HousingFinanceService housingFinanceService;
@@ -34,6 +36,24 @@ public class HousingFinanceController {
 	public ResponseEntity<List<HousingFinance>> getHousingFinance(@PathVariable int historyId) {
 		List<HousingFinance> housingFinances = housingFinanceService.findHousingFinanceByHistoryId(historyId);
 		return ResponseEntity.ok().body(housingFinances);
+	}
+
+	@GetMapping("/years/{year}/summary")
+	public ResponseEntity<SummaryOfYear> getHousingFinanceSummaryOfYear(@PathVariable int year) {
+		SummaryOfYear summaryOfYear = housingFinanceService.findSummaryOfYear(year);
+		return ResponseEntity.ok().body(summaryOfYear);
+	}
+
+	@GetMapping("/years/summary")
+	public ResponseEntity<SummaryOfYear> getAllHousingFinanceSummaryOfYear() {
+		SummaryOfYear summaryOfYear = housingFinanceService.findAllSummaryOfYear();
+		return ResponseEntity.ok().body(summaryOfYear);
+	}
+
+	@GetMapping("/years/{year}/largest")
+	public ResponseEntity<InstituteDetail> get(@PathVariable int year) {
+		InstituteDetail instituteDetail = housingFinanceService.findLargestInstituteByYears(year);
+		return ResponseEntity.ok().body(instituteDetail);
 	}
 
 	@ExceptionHandler(Exception.class)

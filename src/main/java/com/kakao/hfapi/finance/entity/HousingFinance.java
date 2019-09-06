@@ -15,7 +15,8 @@ import com.kakao.hfapi.institute.entity.Institute;
 
 @Entity
 @Table(name = "institute_finance",
-	   indexes = {@Index(columnList = "institute_code"), @Index(columnList = "housing_finance_date")})
+	   indexes = {@Index(columnList = "institute_code"),
+				  @Index(columnList = "housing_finance_year, housing_finance_month")})
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Builder
@@ -26,8 +27,11 @@ public class HousingFinance {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int housingFinanceId;
 
-	@Column(name = "housing_finance_date")
-	private LocalDate housingFinanceDate;
+	@Column(name = "housing_finance_year")
+	private int housingFinanceYear;
+
+	@Column(name = "housing_finance_month")
+	private int housingFinanceMonth;
 
 	@JoinColumn(name = "institute_code")
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -42,7 +46,8 @@ public class HousingFinance {
 
 	public static HousingFinance ofDtos(HousingFinanceDto dto, HousingFinanceHistory housingFinanceHistory) {
 		return HousingFinance.builder()
-							 .housingFinanceDate(LocalDate.of(dto.getYear(), dto.getMonth(), 1))
+							 .housingFinanceYear(dto.getYear())
+							 .housingFinanceMonth(dto.getMonth())
 							 .institute(Institute.of(dto.getInstituteCode().name(), dto.getInstituteCode().getBankName()))
 							 .amount(dto.getAmount())
 							 .housingFinanceHistory(housingFinanceHistory)

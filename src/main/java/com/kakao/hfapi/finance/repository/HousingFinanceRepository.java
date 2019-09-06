@@ -11,4 +11,5 @@ import com.kakao.hfapi.institute.entity.Institute;
 public interface HousingFinanceRepository extends JpaRepository<HousingFinance, Integer> {
 	List<HousingFinance> findByInstitute(Institute institute);
 	List<HousingFinance> findByHousingFinanceHistory(HousingFinanceHistory housingFinanceHistory);
+	List<HousingFinance> findByHousingFinanceYear(int year);
 }
