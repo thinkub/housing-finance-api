@@ -19,6 +19,7 @@ import com.kakao.hfapi.finance.entity.HousingFinance;
 import com.kakao.hfapi.finance.model.SummaryOfYear;
 import com.kakao.hfapi.finance.service.HousingFinanceService;
 import com.kakao.hfapi.institute.model.InstituteDetail;
+import com.kakao.hfapi.institute.model.InstituteSupportAmount;
 
 @RestController
 @RequestMapping("/api/v1/housing/finances")
@@ -51,9 +52,15 @@ public class HousingFinanceController {
 	}
 
 	@GetMapping("/years/{year}/largest")
-	public ResponseEntity<InstituteDetail> get(@PathVariable int year) {
+	public ResponseEntity<InstituteDetail> getLargestInstituteOfYear(@PathVariable int year) {
 		InstituteDetail instituteDetail = housingFinanceService.findLargestInstituteByYears(year);
 		return ResponseEntity.ok().body(instituteDetail);
+	}
+
+	@GetMapping("/institute/{instituteName}/support-amount")
+	public ResponseEntity<InstituteSupportAmount> getInstituteSupport(@PathVariable String instituteName) {
+		InstituteSupportAmount instituteSupportAmount = housingFinanceService.findInstituteSupport(instituteName);
+		return ResponseEntity.ok().body(instituteSupportAmount);
 	}
 
 	@ExceptionHandler(Exception.class)

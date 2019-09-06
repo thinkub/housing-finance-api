@@ -1,6 +1,5 @@
 package com.kakao.hfapi.finance.service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +16,10 @@ import com.kakao.hfapi.finance.model.HousingFinanceDto;
 import com.kakao.hfapi.finance.model.SummaryOfYear;
 import com.kakao.hfapi.finance.repository.HousingFinanceHistoryRepository;
 import com.kakao.hfapi.finance.repository.HousingFinanceRepository;
+import com.kakao.hfapi.institute.entity.Institute;
+import com.kakao.hfapi.institute.model.InstituteCode;
 import com.kakao.hfapi.institute.model.InstituteDetail;
+import com.kakao.hfapi.institute.model.InstituteSupportAmount;
 import com.kakao.hfapi.util.CsvConverter;
 
 @Service
@@ -59,12 +61,16 @@ public class HousingFinanceService {
 
 	public InstituteDetail findLargestInstituteByYears(int year) {
 		List<HousingFinance> housingFinances = housingFinanceRepository.findByHousingFinanceYear(year);
-		List<InstituteDetail> instituteDetails = InstituteDetail.ofList(housingFinances);
-		InstituteDetail instituteDetail = instituteDetails.stream()
-														  .max(Comparator.comparingLong(InstituteDetail::getAmount))
-														  .orElse(null);
+		InstituteDetail instituteDetail = InstituteDetail.ofLargestAmount(housingFinances);
 
 		return InstituteDetail.ofYear(instituteDetail.getInstituteName(), year);
+	}
+
+	public InstituteSupportAmount findInstituteSupport(String instituteName) {
+		InstituteCode instituteCode = InstituteCode.getType(instituteName);
+		List<HousingFinance> housingFinances =
+				housingFinanceRepository.findByInstitute(Institute.of(instituteCode.name(), instituteCode.getBankName()));
+		return InstituteSupportAmount.of(instituteName, housingFinances);
 	}
 
 	private SummaryOfYear convertSummaryOfYear(List<HousingFinance> housingFinances) {

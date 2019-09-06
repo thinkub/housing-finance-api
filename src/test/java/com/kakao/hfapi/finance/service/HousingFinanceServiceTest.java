@@ -37,7 +37,6 @@ public class HousingFinanceServiceTest {
 	@Before
 	public void init() throws Exception {
 		String fileName = "sample.csv";
-
 		File file = new ClassPathResource(fileName).getFile();
 		FileInputStream inputFile = new FileInputStream(file);
 		multipartFile = new MockMultipartFile("file", fileName, "multipart/form-data", inputFile);
@@ -51,7 +50,8 @@ public class HousingFinanceServiceTest {
 																		   .registerDatetime(LocalDateTime.now())
 																		   .build();
 
-		given(housingFinanceHistoryRepository.save(HousingFinanceHistory.getInstance())).willReturn(housingFinanceHistory);
+		given(housingFinanceHistoryRepository.save(HousingFinanceHistory.getInstance(multipartFile.getOriginalFilename())))
+				.willReturn(housingFinanceHistory);
 
 		int historyId = housingFinanceService.save(multipartFile);
 		log.info("{}", historyId);

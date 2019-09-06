@@ -33,12 +33,48 @@ public class InstituteDetail {
 								  .collect(toList());
 	}
 
+	public static InstituteDetail ofLargestAmount(List<HousingFinance> housingFinances) {
+		List<InstituteDetail> instituteDetails = ofList(housingFinances);
+		return instituteDetails.stream()
+							   .max(Comparator.comparingLong(InstituteDetail::getAmount))
+							   .orElse(null);
+	}
+
+	public static InstituteDetail ofLargestAmountByInstitute(List<HousingFinance> housingFinances) {
+		List<InstituteDetail> instituteDetails = ofYearsSummary(housingFinances);
+		return instituteDetails.stream()
+							   .max(Comparator.comparingLong(InstituteDetail::getAmount))
+							   .orElse(null);
+	}
+
+	public static InstituteDetail ofSmallestAmountByInstitute(List<HousingFinance> housingFinances) {
+		List<InstituteDetail> instituteDetails = ofYearsSummary(housingFinances);
+		return instituteDetails.stream()
+							   .min(Comparator.comparingLong(InstituteDetail::getAmount))
+							   .orElse(null);
+	}
+
 	public static InstituteDetail ofYear(String instituteName, int year) {
 		return new InstituteDetail(instituteName, year);
 	}
 
+	private static List<InstituteDetail> ofYearsSummary(List<HousingFinance> housingFinances) {
+		Map<Integer, Long> yearsSummaryMap =
+				housingFinances.stream()
+							   .collect(groupingBy(HousingFinance::getHousingFinanceYear, summingLong(HousingFinance::getAmount)));
+
+		return yearsSummaryMap.entrySet()
+							  .stream()
+							  .map(e -> InstituteDetail.ofYearAndAmount(e.getKey(), e.getValue()))
+							  .collect(toList());
+	}
+
 	private static InstituteDetail ofAmount(String instituteName, long amount) {
 		return new InstituteDetail(instituteName, amount);
+	}
+
+	private static InstituteDetail ofYearAndAmount(int year, long amount) {
+		return new InstituteDetail(year, amount);
 	}
 
 	private InstituteDetail(String instituteName, long amount) {
@@ -49,5 +85,10 @@ public class InstituteDetail {
 	private InstituteDetail(String instituteName, int year) {
 		this.year = year;
 		this.instituteName = instituteName;
+	}
+
+	private InstituteDetail(int year, long amount) {
+		this.year = year;
+		this.amount = amount;
 	}
 }

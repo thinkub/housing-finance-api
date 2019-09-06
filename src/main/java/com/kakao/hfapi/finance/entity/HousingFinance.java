@@ -1,7 +1,5 @@
 package com.kakao.hfapi.finance.entity;
 
-import java.time.LocalDate;
-
 import javax.persistence.*;
 
 import lombok.AccessLevel;
