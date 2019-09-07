@@ -12,9 +12,8 @@ import com.kakao.hfapi.finance.model.HousingFinanceDto;
 import com.kakao.hfapi.institute.entity.Institute;
 
 @Entity
-@Table(name = "institute_finance",
-	   indexes = {@Index(columnList = "institute_code"),
-				  @Index(columnList = "housing_finance_year, housing_finance_month")})
+@Table(name = "housing_finance",
+	   indexes = {@Index(columnList = "housing_finance_year, housing_finance_month, institute_code", unique = true)})
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Builder

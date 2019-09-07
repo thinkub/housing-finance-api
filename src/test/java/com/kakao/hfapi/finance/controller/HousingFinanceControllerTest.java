@@ -1,28 +1,30 @@
 package com.kakao.hfapi.finance.controller;
 
 import static org.junit.Assert.*;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.util.Collections;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.kakao.hfapi.finance.entity.HousingFinance;
 import com.kakao.hfapi.finance.entity.HousingFinanceHistory;
 import com.kakao.hfapi.finance.repository.HousingFinanceRepository;
+import com.kakao.hfapi.finance.repository.HousingFinanceSummaryRepository;
 import com.kakao.hfapi.finance.service.HousingFinanceService;
-
+import com.kakao.hfapi.institute.entity.Institute;
+import com.kakao.hfapi.institute.model.InstituteCode;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = HousingFinanceController.class)
@@ -35,33 +37,36 @@ public class HousingFinanceControllerTest {
 	private HousingFinanceRepository housingFinanceRepository;
 	@MockBean
 	private HousingFinanceHistory housingFinanceHistory;
+	@MockBean
+	private HousingFinanceSummaryRepository housingFinanceSummaryRepository;
 
 	@Test
-	public void uploadTest() throws Exception {
-		String fileName = "sample.csv";
-		File file = new ClassPathResource(fileName).getFile();
-		FileInputStream inputFile = new FileInputStream(file);
-		MockMultipartFile multipartFile = new MockMultipartFile("file", fileName, "multipart/form-data", inputFile);
+	public void 저장한금융정보_히스토리ID로조회() throws Exception {
+		InstituteCode instituteCode = InstituteCode.B000;
+		Institute institute = Institute.of(instituteCode.name(), instituteCode.getBankName());
+		HousingFinanceHistory housingFinanceHistory = HousingFinanceHistory.builder()
+																		   .fileName("sample.csv")
+																		   .housingFinanceHistoryId(1)
+																		   .build();
+		HousingFinance housingFinance = HousingFinance.builder()
+													  .housingFinanceId(1)
+													  .housingFinanceYear(2019)
+													  .housingFinanceMonth(1)
+													  .institute(institute)
+													  .housingFinanceHistory(housingFinanceHistory)
+													  .build();
 
-		MockHttpServletRequestBuilder builder =
-				MockMvcRequestBuilders.multipart("/api/v1/housing/finances").file(multipartFile);
-
-		mockMvc.perform(builder)
+		given(housingFinanceService.findHousingFinanceByHistoryId(1)).willReturn(Collections.singletonList(housingFinance));
+		mockMvc.perform(get("/api/v1/housing/finances/1"))
 			   .andDo(print())
-			   .andExpect(status().isOk());
+			   .andExpect(status().isOk())
+			   .andExpect(jsonPath("$").isArray())
+			   .andExpect(jsonPath("$.length()").value(1))
+			   .andExpect(jsonPath("$[0].housingFinanceId").value(1))
+			   .andExpect(jsonPath("$[0].housingFinanceYear").value(2019))
+			   .andExpect(jsonPath("$[0].housingFinanceMonth").value(1))
+			   .andExpect(jsonPath("$[0].institute.instituteCode").value("B000"));
 	}
 
-	@Test
-	public void 저장된금융정보_historyId로조회() {
 
-
-	}
-
-	@Test
-	public void getHousingFinanceSummaryOfYear() {
-	}
-
-	@Test
-	public void getAllHousingFinanceSummaryOfYear() {
-	}
 }

@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.AllArgsConstructor;
 
 import com.kakao.hfapi.finance.entity.HousingFinance;
-import com.kakao.hfapi.finance.model.SummaryOfYear;
+import com.kakao.hfapi.finance.model.SummaryByYear;
 import com.kakao.hfapi.finance.service.HousingFinanceService;
 import com.kakao.hfapi.institute.model.InstituteDetail;
 import com.kakao.hfapi.institute.model.InstituteSupportAmount;
@@ -39,21 +39,15 @@ public class HousingFinanceController {
 		return ResponseEntity.ok().body(housingFinances);
 	}
 
-	@GetMapping("/years/{year}/summary")
-	public ResponseEntity<SummaryOfYear> getHousingFinanceSummaryOfYear(@PathVariable int year) {
-		SummaryOfYear summaryOfYear = housingFinanceService.findSummaryOfYear(year);
-		return ResponseEntity.ok().body(summaryOfYear);
-	}
-
 	@GetMapping("/years/summary")
-	public ResponseEntity<SummaryOfYear> getAllHousingFinanceSummaryOfYear() {
-		SummaryOfYear summaryOfYear = housingFinanceService.findAllSummaryOfYear();
-		return ResponseEntity.ok().body(summaryOfYear);
+	public ResponseEntity<SummaryByYear> getAllHousingFinanceSummaryByYear() {
+		SummaryByYear summaryByYear = housingFinanceService.findAllSummaryByYear();
+		return ResponseEntity.ok().body(summaryByYear);
 	}
 
-	@GetMapping("/years/{year}/largest")
-	public ResponseEntity<InstituteDetail> getLargestInstituteOfYear(@PathVariable int year) {
-		InstituteDetail instituteDetail = housingFinanceService.findLargestInstituteByYears(year);
+	@GetMapping("/institute-years/largest-amount")
+	public ResponseEntity<InstituteDetail> getLargestAmountYearByInstituteAndYear() {
+		InstituteDetail instituteDetail = housingFinanceService.findLargestAmountYearByInstituteAndYear();
 		return ResponseEntity.ok().body(instituteDetail);
 	}
 
@@ -65,7 +59,8 @@ public class HousingFinanceController {
 
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public String handelException(Exception e) {
-		return e.getMessage();
+	public ResponseEntity<String> handelException(Exception e) {
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+							 .body(e.getMessage());
 	}
 }
