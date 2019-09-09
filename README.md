@@ -38,6 +38,7 @@ csv저장시 기존 저장되어있는 기관의 경우 Duplication Exception이
 csv저장시 기관에 대한 위치가 고정으로 가정하였기 때문에 순서가 다르게 들어오는 csv파일에 대한 고려 필요<br>
 
 ## 빌드
-mvn clean<br>
-mvn package<br>
-java -jar target/hf-api-0.0.2-SNAPSHOT.jar<br>
+```
+mvn clean package
+java -jar target/hf-api-*.jar
+```
