@@ -23,18 +23,21 @@
 - url : GET /api/v1/housing/finances/institute/{instituteName}/support-amount
 
 ### csv파싱
-org.apache.commons 의 commons-csv를 이용하여 파싱
-Excel title을 이용해서 기관별 매핑을 하려고 했으나 title에 기관명 말고 금액 단위까지 있어서 
-기관별 excel 열 위치가 동일하다는 가정으로 개발
+org.apache.commons 의 commons-csv를 이용하여 파싱<br>
+Excel title을 이용해서 기관별 매핑을 하려고 했으나 title에 기관명 말고 금액 단위까지 있어서 <br>
+기관별 excel 열 위치가 동일하다는 가정으로 개발<br>
 
 ### 엔티티
-연도 / 월 / 기관 / 금액 기준으로 Entity 를 구성하고 필요 정보를 application에서 summary처리 하였으나
-요구 사항 확인시 연도별 집계 Entity가 필요하다고 판단하여
-연도 / 월 / 기관 / 금액 기준의 Entity와
-연도 / 기관 / summary금액 기준의 Entity를 구성함
+연도 / 월 / 기관 / 금액 기준으로 Entity 를 구성하고 필요 정보를 application에서 summary처리 하였으나<br>
+요구 사항 확인시 연도별 집계 Entity가 필요하다고 판단하여<br>
+연도 / 월 / 기관 / 금액 기준의 Entity와<br>
+연도 / 기관 / summary금액 기준의 Entity를 구성함<br>
 
 ### 고민거리들
-csv저장시 기존 저장되어있는 기관의 경우 Duplication Exception이 발생 하는데 이부분에 대한 failover방안 필요
-csv저장시 기관에 대한 위치가 고정으로 가정하였기 때문에 순서가 다르게 들어오는 csv파일에 대한 고려 필요
+csv저장시 기존 저장되어있는 기관의 경우 Duplication Exception이 발생 하는데 이부분에 대한 failover방안 필요<br>
+csv저장시 기관에 대한 위치가 고정으로 가정하였기 때문에 순서가 다르게 들어오는 csv파일에 대한 고려 필요<br>
 
 ## 빌드
+mvn clean<br>
+mvn package<br>
+java -jar target/hf-api-0.0.2-SNAPSHOT.jar<br>
