@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Collections;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,8 @@ import com.kakao.hfapi.finance.repository.HousingFinanceSummaryRepository;
 import com.kakao.hfapi.finance.service.HousingFinanceService;
 import com.kakao.hfapi.institute.entity.Institute;
 import com.kakao.hfapi.institute.model.InstituteCode;
+import com.kakao.hfapi.institute.repository.InstituteRepository;
+import com.kakao.hfapi.institute.service.InstituteService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = HousingFinanceController.class)
@@ -39,6 +40,10 @@ public class HousingFinanceControllerTest {
 	private HousingFinanceHistory housingFinanceHistory;
 	@MockBean
 	private HousingFinanceSummaryRepository housingFinanceSummaryRepository;
+	@MockBean
+	private InstituteService instituteService;
+	@MockBean
+	private InstituteRepository instituteRepository;
 
 	@Test
 	public void 저장한금융정보_히스토리ID로조회() throws Exception {
@@ -67,6 +72,4 @@ public class HousingFinanceControllerTest {
 			   .andExpect(jsonPath("$[0].housingFinanceMonth").value(1))
 			   .andExpect(jsonPath("$[0].institute.instituteCode").value("B000"));
 	}
-
-
 }
