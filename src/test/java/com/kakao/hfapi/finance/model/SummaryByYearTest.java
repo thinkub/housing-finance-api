@@ -73,6 +73,6 @@ public class SummaryByYearTest {
 		List<InstituteDetail> expect = Arrays.asList(InstituteDetail.ofAmount(summaryByYear1), InstituteDetail.ofAmount(summaryByYear2));
 
 		// then
-		assertThat(actual, IsIterableContainingInOrder.contains(expect.toArray()));
+		assertThat(actual.get(0).getAmount(), is(expect.get(0).getAmount()));
 	}
 }
